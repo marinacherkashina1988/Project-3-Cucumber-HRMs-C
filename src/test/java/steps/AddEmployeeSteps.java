@@ -3,23 +3,36 @@ package steps;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Assert;
 import utils.CommonMethods;
 import utils.ConfigReader;
 import utils.Constants;
+import utils.ExcelReader;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.*;
 
 public class AddEmployeeSteps extends CommonMethods {
 
     @When("user enters an employee full name")
     public void user_enters_an_employee_full_name() {
-        sendText(ConfigReader.read("firstName"), addEmployeePage.firstNameField);
-        sendText(ConfigReader.read("middleName"), addEmployeePage.middleNameField);
-        sendText(ConfigReader.read("lastName"), addEmployeePage.lastNameField);
+        try {
+            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            for (Map<String, String> employee : newEmployeeDetails) {
+                sendText(employee.get("First Name"), addEmployeePage.firstNameField);
+                sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
+                sendText(employee.get("Last Name"), addEmployeePage.lastNameField);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @When("user clicks on Save button")
@@ -35,30 +48,19 @@ public class AddEmployeeSteps extends CommonMethods {
     @And("user enters an employee full name and ID")
     public void userEntersAnEmployeeFullNameAndID() {
 
-        sendText(ConfigReader.read("firstName"), addEmployeePage.firstNameField);
-        sendText(ConfigReader.read("middleName"), addEmployeePage.middleNameField);
-        sendText(ConfigReader.read("lastName"), addEmployeePage.lastNameField);
+        int employeeID = generateNumbers();
 
-        Properties properties = new Properties();
-        int employeeIdParsed = 0;
-
-        try (FileInputStream fis = new FileInputStream(Constants.CONFIG_FILE_PATH)) {
-            properties.load(fis);
-            System.out.println(ConfigReader.read("employeeID"));
-            employeeIdParsed = Integer.parseInt(ConfigReader.read("employeeID"));
-            employeeIdParsed++;
+        try {
+            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            for (Map<String, String> employee : newEmployeeDetails) {
+                sendText(employee.get("First Name"), addEmployeePage.firstNameField);
+                sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
+                sendText(employee.get("Last Name"), addEmployeePage.lastNameField);
+                sendText(String.valueOf(employeeID), addEmployeePage.employeeIDField);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-        properties.setProperty("employeeID", String.valueOf(employeeIdParsed));
-
-        try (FileOutputStream output = new FileOutputStream(Constants.CONFIG_FILE_PATH)) {
-            properties.store(output, "Updated Employee ID on run");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        sendText(ConfigReader.read("employeeID"), addEmployeePage.employeeIDField);
     }
 
     @And("user clicks on Add Employee button")
@@ -66,14 +68,16 @@ public class AddEmployeeSteps extends CommonMethods {
         click(addEmployeePage.addEmployeeButton);
     }
 
-    @And("user uploads profile photo")
-    public void userUploadsProfilePhoto() {
-        addEmployeePage.photoField.sendKeys(ConfigReader.read("profilePhoto"));
-    }
-
     @And("user enters middlename")
     public void userEntersMiddlename() {
-        sendText(ConfigReader.read("middleName"), addEmployeePage.middleNameField);
+        try {
+            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            for (Map<String, String> employee : newEmployeeDetails) {
+                sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @And("clear error message or prompts is displayed for firstname and lastname fields")
@@ -84,10 +88,18 @@ public class AddEmployeeSteps extends CommonMethods {
 
     @And("user enters an employee full name and existing ID")
     public void userEntersAnEmployeeFullNameAndExistingID() {
-        sendText(ConfigReader.read("firstName"), addEmployeePage.firstNameField);
-        sendText(ConfigReader.read("middleName"), addEmployeePage.middleNameField);
-        sendText(ConfigReader.read("lastName"), addEmployeePage.lastNameField);
-        sendText(ConfigReader.read("existingID"), addEmployeePage.employeeIDField);
+        String existingID = "2023962";
+        try {
+            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            for (Map<String, String> employee : newEmployeeDetails) {
+                sendText(employee.get("First Name"), addEmployeePage.firstNameField);
+                sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
+                sendText(employee.get("Last Name"), addEmployeePage.lastNameField);
+                sendText(existingID, addEmployeePage.employeeIDField);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Then("clear error message is displayed")

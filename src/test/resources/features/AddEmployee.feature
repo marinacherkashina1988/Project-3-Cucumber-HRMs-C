@@ -9,14 +9,12 @@ Feature: Adding new employees related scenarios
   @addByName @addEmployee
   Scenario: adding a new employee without providing an employee ID
     And user enters an employee full name
-    And user uploads profile photo
     And user clicks on Save button
     Then user is navigated to the new employee profile page
 
   @addByID @addEmployee
   Scenario: adding a new employee by providing an employee ID
     And user enters an employee full name and ID
-    And user uploads profile photo
     And user clicks on Save button
     Then user is navigated to the new employee profile page
 
@@ -26,11 +24,11 @@ Feature: Adding new employees related scenarios
     And user clicks on Save button
     Then clear error message or prompts is displayed for firstname and lastname fields
 
-    @existingIdError @addEmployee @failedToSave
-    Scenario: Validating an error message when user attempts to add an employee with an existing ID
-      And user enters an employee full name and existing ID
-      And user clicks on Save button
-      Then clear error message is displayed
+  @existingIdError @addEmployee @failedToSave
+  Scenario: Validating an error message when user attempts to add an employee with an existing ID
+    And user enters an employee full name and existing ID
+    And user clicks on Save button
+    Then clear error message is displayed
 
 
 
