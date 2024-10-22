@@ -3,19 +3,9 @@ package steps;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Assert;
 import utils.CommonMethods;
-import utils.ConfigReader;
-import utils.Constants;
 import utils.ExcelReader;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +14,7 @@ public class AddEmployeeSteps extends CommonMethods {
     @When("user enters an employee full name")
     public void user_enters_an_employee_full_name() {
         try {
-            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            List<Map<String, String>> newEmployeeDetails = ExcelReader.read();
             for (Map<String, String> employee : newEmployeeDetails) {
                 sendText(employee.get("First Name"), addEmployeePage.firstNameField);
                 sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
@@ -51,7 +41,7 @@ public class AddEmployeeSteps extends CommonMethods {
         int employeeID = generateNumbers();
 
         try {
-            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            List<Map<String, String>> newEmployeeDetails = ExcelReader.read();
             for (Map<String, String> employee : newEmployeeDetails) {
                 sendText(employee.get("First Name"), addEmployeePage.firstNameField);
                 sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
@@ -71,7 +61,7 @@ public class AddEmployeeSteps extends CommonMethods {
     @And("user enters middlename")
     public void userEntersMiddlename() {
         try {
-            List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
+            List<Map<String, String>> newEmployeeDetails = ExcelReader.read();
             for (Map<String, String> employee : newEmployeeDetails) {
                 sendText(employee.get("Middle Name"), addEmployeePage.middleNameField);
             }
@@ -86,9 +76,8 @@ public class AddEmployeeSteps extends CommonMethods {
         Assert.assertTrue(addEmployeePage.empLastNameErrorMsg.isDisplayed());
     }
 
-    @And("user enters an employee full name and existing ID")
-    public void userEntersAnEmployeeFullNameAndExistingID() {
-        String existingID = "2023962";
+    @And("user enters an employee full name and existing ID {string}")
+    public void userEntersAnEmployeeFullNameAndExistingID(String existingID) {
         try {
             List<Map<String, String>> newEmployeeDetails = newEmployeeDetails = ExcelReader.read();
             for (Map<String, String> employee : newEmployeeDetails) {

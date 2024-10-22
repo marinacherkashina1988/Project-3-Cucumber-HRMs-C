@@ -33,10 +33,9 @@ public class LoginSteps extends CommonMethods {
         click(loginPage.loginButton);
     }
 
-    @Then("user is navigated to the dashboard page")
-    public void user_is_navigated_to_the_dashboard_page() {
-        String expectedWelcomeMsg = "Welcome Admin";
-        Assert.assertEquals(expectedWelcomeMsg, dashboardPage.welcomeMessage.getText());
+    @Then("user is navigated to the dashboard page with welcome message {string}")
+    public void userIsNavigatedToTheDashboardPageWithWelcomeMessage(String welcomeMessage) {
+        Assert.assertEquals(welcomeMessage, dashboardPage.welcomeMessage.getText());
     }
 
     @When("user enters password")
@@ -49,37 +48,32 @@ public class LoginSteps extends CommonMethods {
         sendText(ConfigReader.read("userName"), loginPage.usernameField);
     }
 
-    @Then("empty username error message is displayed")
-    public void emptyUsernameErrorMessageIsDisplayed() {
-        String expectedEmptyUserNameErrorMsg = "Username cannot be empty";
-        Assert.assertEquals(expectedEmptyUserNameErrorMsg, loginPage.errorMessage.getText());
+    @Then("empty username error message {string} is displayed")
+    public void emptyUsernameErrorMessageIsDisplayed(String emptyUsernameError) {
+        Assert.assertEquals(emptyUsernameError, loginPage.errorMessage.getText());
     }
 
-    @Then("empty password error message is displayed")
-    public void emptyPasswordErrorMessageIsDisplayed() {
-        //make a screenshot because it is failing: Empty and empty
-        String expectedEmptyPassErrorMsg = "Password is empty";
-        Assert.assertEquals(expectedEmptyPassErrorMsg, loginPage.errorMessage.getText());
+    @Then("empty password error message {string} is displayed")
+    public void emptyPasswordErrorMessageIsDisplayed(String emptyPasswordError) {
+        Assert.assertEquals(emptyPasswordError, loginPage.errorMessage.getText());
     }
 
-    @When("user enters incorrect username and correct password")
-    public void userEntersIncorrectUsernameAndCorrectPassword() {
-        String incorrectUserName = "AdminTest";
-        sendText(incorrectUserName, loginPage.usernameField);
+    @When("user enters incorrect username {string} and correct password")
+    public void userEntersIncorrectUsernameAndCorrectPassword(String wrongUsername) {
+        sendText(wrongUsername, loginPage.usernameField);
         sendText(ConfigReader.read("password"), loginPage.passwordField);
+
     }
 
-    @And("error message is displayed")
-    public void errorMessageIsDisplayed() {
-        String incorrectCredentialsError="Invalid credentials";
-        Assert.assertEquals(incorrectCredentialsError, loginPage.errorMessage.getText());
-    }
-
-    @When("user enters incorrect username or incorrect password")
-    public void userEntersIncorrectUsernameOrIncorrectPassword() {
-        String incorrectPassword = "Human123";
+    @When("user enters correct username and incorrect password {string}")
+    public void userEntersCorrectUsernameAndIncorrectPassword(String wrongPassword) {
         sendText(ConfigReader.read("userName"), loginPage.usernameField);
-        sendText(incorrectPassword, loginPage.passwordField);
+        sendText(wrongPassword, loginPage.passwordField);
+    }
+
+    @Then("error message {string} is displayed")
+    public void errorMessageIsDisplayed(String invalidCredentialsError) {
+        Assert.assertEquals(invalidCredentialsError, loginPage.errorMessage.getText());
     }
 
     @And("user corrects the credentials and clicks on login button")

@@ -26,7 +26,7 @@ Feature: Adding new employees related scenarios
 
   @existingIdError @addEmployee @failedToSave
   Scenario: Validating an error message when user attempts to add an employee with an existing ID
-    And user enters an employee full name and existing ID
+    And user enters an employee full name and existing ID "2023962"
     And user clicks on Save button
     Then clear error message is displayed
 
